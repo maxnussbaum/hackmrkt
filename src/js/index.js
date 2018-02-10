@@ -5,7 +5,7 @@ import './../css/index.css'
 
 web3.setProvider(new web3.providers.HttpProvider());
 
-const address = "0x81aa40a6d27e88621f7d25ffecb96a64c6999fe3"
+const address = "0xb29793080eacd1b5523eb4c5e8f3197a46704c49"
 var json = require("./../../build/contracts/First.json");
 var contract = require("truffle-contract");
 const abi = contract(json);
@@ -323,39 +323,34 @@ updateState(){
            value: web3.toWei(1.0, 'ether')
        })
    }
+   listProd(_price, _quantity){
+       this.state.ContractInstance.listProduct(web3.eth.accounts[0], _price, _quantity, {
+           gas: 1000000,
+           from: web3.eth.accounts[0],
+           value: web3.toWei(50, 'finney')
+       })
+   }
 render(){
       return (
          <div className="main-container">
-            <h1>The Invincible mrktPlace</h1>
-<div className="block">
-               <b>Number of bets:</b> &nbsp;
-               <span>0</span>
-            </div>
-<div className="block">
-               <b>Last number winner:</b> &nbsp;
-               <span>0</span>
-            </div>
-<div className="block">
-               <b>Total ether bet:</b> &nbsp;
-               <span>0 ether</span>
-            </div>
-<div className="block">
-               <b>Minimum bet:</b> &nbsp;
-               <span>0 ether</span>
-            </div>
-<div className="block">
-               <b>Max amount of bets:</b> &nbsp;
-               <span>0</span>
-            </div>
-<hr/>
-<h2>Vote for the next number</h2>
-<label>
-               <b>How much Ether do you want to bet? <input className="bet-input" ref="ether-bet" type="number" placeholder={this.state.minimumBet}/></b> ether
-               <br/>
-            </label>
-   <ul ref="numbers">
-               <li onClick={this.buySeller}>1</li>
-            </ul>
+            <h1>The mrktPlace</h1>
+               <button onClick={this.buySeller}>Become a Seller!</button>
+               <form>
+               <h2>List a Product!</h2>
+               <label>
+                   Product Name
+                   <input type="text" name="name" />
+               </label>
+                <label>
+                    Price
+                    <input type="number" name="_price" />
+                </label>
+                <label>
+                    Quantity
+                    <input type="number" name="_quantity" />
+                </label>
+                    <input type="submit" value="Submit" />
+                </form>
          </div>
       )
    }
