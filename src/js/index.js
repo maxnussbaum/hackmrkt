@@ -20,7 +20,8 @@ class App extends React.Component {
             prodNameInput: "",
             prodNumInput: "",
             prodQuantInput: "",
-            sellerAddressArr: []
+            sellerAddressArr: [],
+            merch: {}
         };
         if(typeof web3 != 'undefined'){
             console.log("Using web3 detected from external source like Metamask")
@@ -97,7 +98,7 @@ class App extends React.Component {
                     console.log("newSeller works?");
                     console.log("test", this);
                     this.setState({
-                        arr: this.state.sellerAddressArr.concat(result.args._seller)
+                        sellerAddressArr: this.state.sellerAddressArr.concat(result.args._seller)
                     });
                 }else if (typeof result.args.__seller != "undefined"){
                     console.log("seller removed?");
@@ -112,6 +113,14 @@ class App extends React.Component {
                     }
                 }else if (typeof result.args.seller != 'undefined' && typeof result.args.price != 'undefined' && typeof result.args.prodID != 'undefined' && typeof result.args.buyer == 'undefined' && typeof result.args.quantity != 'undefined'){
                     console.log("product listed?");
+                    console.log("test", this);
+                    const newProdList = {
+                        [[result.args.seller, result.args.prodID]]: [result.args.price, result.args.quantity]
+                    };
+                    const new2Prod = Object.assign(this.state.merch, newProdList);
+                    this.setState({
+                        merch: new2Prod
+                    });
                 }else if (typeof result.args.seller != 'undefined' && typeof result.args.buyer != 'undefined' && result.args.prodID != 'undefined' && result.args.price != 'undefined'){
                     console.log("product bought?");
                 }else if (typeof result.args.seller != 'undefined' && typeof result.args.prodID != 'undefined' && result.args.buyer == 'undefined' && result.args.pauseStatus == 'undefined'){
@@ -180,8 +189,17 @@ class App extends React.Component {
         return (
             <div className="main-container">
             <h1>The mrktPlace</h1>
-            <p>{this.state.sellerAddressArr}</p>
+            <table border="1">
+            <tbody>
+            <tr><th>Seller Addresses</th><th><button onClick={this.buySeller}>Become a Seller!</button></th></tr>
+            {this.state.sellerAddressArr.map((key, index) => {
+                return <tr><td key={index}>{key}</td></tr>
+            })}
+            </tbody>
+            </table>
+            {/*
             <div align="left"><button onClick={this.buySeller} align='left' >Become a Seller!</button></div>
+            */}
             <div align="right"><button onClick={this.remSeller} align='right'>Remove a Seller!</button></div>
             <form onSubmit={this.handleListProdSubmit}>
             <h2>List a Product!</h2>
@@ -199,6 +217,34 @@ class App extends React.Component {
             </label>
             <input type="submit" value="Submit" />
             </form>
+            <table border="1">
+            <tbody>
+            <tr>
+            <th>Vendor</th>
+            <th>Product ID</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Buy</th>
+            </tr>
+            {Object.keys(this.state.merch).map(function(key) {
+                return //<div>Key: {key}, Value: {yourObject[key]}</div>;
+                <tr>
+                <td>{key[0]}</td>
+                {console.log("hi")}
+                {console.log({key})}
+                <td>{key[1]}</td>
+                </tr>
+                // for (var key in this.state.merch)
+                //     <tr>
+                //         <td>{key[0]}</td>
+                //         <td>{key[1]}</td>
+                //         <td>{this.state.merch.key.0}</td>
+                //         <td>{this.state.merch.key.1}</td>
+                //     </tr>
+                // }}
+            })}
+            </tbody>
+            </table>
             </div>
         )
     }
