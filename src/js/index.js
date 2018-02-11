@@ -5,7 +5,7 @@ import './../css/index.css'
 
 web3.setProvider(new web3.providers.HttpProvider());
 
-const address = "0x6945f2889076dbc9e0f5586381d2b7cbb88c3193"
+const address = "0xa51cd9919559f9a84d9d603af75444a884e6af9b"
 var json = require("./../../build/contracts/First.json");
 var contract = require("truffle-contract");
 const abi = contract(json);
@@ -17,11 +17,10 @@ class App extends React.Component {
         super(props)
         this.state = {
             vendor: web3.eth.defaultAccount,
-            isASeller: "a",
             prodNameInput: "",
             prodNumInput: "",
             prodQuantInput: "",
-        }
+        };
         if(typeof web3 != 'undefined'){
             console.log("Using web3 detected from external source like Metamask")
             this.web3 = new Web3(web3.currentProvider)
@@ -37,7 +36,6 @@ class App extends React.Component {
         // var productPauseToggled = this.state.ContractInstance.ProductPauseToggled({fromBlock: 0, toBlock: 'latest'});
         // var newSeller = this.state.ContractInstance.NewSeller({fromBlock: 0, toBlock: 'latest'});
         var events = this.state.ContractInstance.allEvents({fromBlock: 0, toBlock: 'latest'});
-        //console.log("1");
         events.watch(function(error, result){
             //console.log("1.1");
             if (!error)
@@ -45,6 +43,8 @@ class App extends React.Component {
                 console.log(result.args);
                 if (typeof result.args._seller != "undefined"){
                     console.log("newSeller works?");
+                }else if (typeof result.args.__seller != "undefined"){
+                    console.log("seller removed?");
                 }else if (typeof result.args.seller != 'undefined' && typeof result.args.price != 'undefined' && typeof result.args.prodID != 'undefined' && typeof result.args.buyer == 'undefined'){
                     console.log("product listed?");
                 }else if (typeof result.args.seller != 'undefined' && typeof result.args.buyer != 'undefined' && result.args.prodID != 'undefined' && result.args.price != 'undefined'){
@@ -60,54 +60,18 @@ class App extends React.Component {
                 return;
             }
         });
-        //console.log("2");
-        // productPauseToggled.watch(function(error, result){
-        //     if (!error)
-        //     {
-        //         console.log(result.args);
-        //         console.log("productPauseToggled works?");
-        //     } else {
-        //         console.log(error);
-        //         console.log("productPauseToggled doesn't work?")
-        //         return;
-        //     }
-        // });
-        // productRemoved.watch(function(error, result){
-        //     if (!error)
-        //     {
-        //         console.log(result.args);
-        //         console.log("productRemoved works?");
-        //     } else {
-        //         console.log(error);
-        //         console.log("productRemoved doesn't work?")
-        //         return;
-        //     }
-        // });
-        // productBought.watch(function(error, result){
-        //     if (!error)
-        //     {
-        //         console.log(result.args);
-        //         console.log("productBought works?");
-        //     } else {
-        //         console.log(error);
-        //         console.log("productBought doesn't work?")
-        //         return;
-        //     }
-        // });
-        // productListed.watch(function(error, result){
-        //     if (!error)
-        //     {
-        //         console.log(result.args);
-        //         console.log("productListed works?");
-        //     } else {
-        //         console.log(error);
-        //         console.log("productListed doesn't work?")
-        //         return;
-        //     }
-        // });
-
-
-        //console.log("3")
+        // if (newwSeller != ""){
+        //     var sellerAddress = this.state.sellerAddress.split();
+        //     console.log("next");
+        //     sellerAddress.push(newwSeller);
+        //     this.setState({
+        //         sellerAddress: sellerAddress
+        //     });
+        //     newwSeller = "";
+        //     console.log(this.state.sellerAddress);
+        // }else{
+        //     console.log("other");
+        // }
         this.buySeller = this.buySeller.bind(this)
         this.listProd = this.listProd.bind(this)
         this.remSeller = this.remSeller.bind(this)
@@ -116,6 +80,7 @@ class App extends React.Component {
         this.handleListProdQuantChange = this.handleListProdQuantChange.bind(this);
         this.handleListProdSubmit = this.handleListProdSubmit.bind(this);
     }
+
 
     handleListProdNameChange(event){
         console.log("namechange");
@@ -170,22 +135,22 @@ class App extends React.Component {
         return (
             <div className="main-container">
             <h1>The mrktPlace</h1>
-            <p>{this.state.isASeller}</p>
-            <button onClick={this.buySeller}>Become a Seller!</button>
-            <button onClick={this.remSeller}>Remove a Seller!</button>
+            <p>{this.state.sellerAddress}</p>
+            <div align="left"><button onClick={this.buySeller} align='left' >Become a Seller!</button></div>
+            <div align="right"><button onClick={this.remSeller} align='right'>Remove a Seller!</button></div>
             <form onSubmit={this.handleListProdSubmit}>
             <h2>List a Product!</h2>
             <label>
             Product Name
-            <input type="text" value={this.state.prodNameInput} onChange={this.handleListProdNameChange}/>
+            <div><input type="text" value={this.state.prodNameInput} onChange={this.handleListProdNameChange}/></div>
             </label>
             <label>
             Price
-            <input type="number" value={this.state.prodNumInput} onChange={this.handleListProdNumChange}/>
+            <div><input type="number" value={this.state.prodNumInput} onChange={this.handleListProdNumChange}/></div>
             </label>
             <label>
             Quantity
-            <input type="number"value={this.state.prodQuantInput} onChange={this.handleListProdQuantChange}/>
+            <div><input type="number"value={this.state.prodQuantInput} onChange={this.handleListProdQuantChange}/></div>
             </label>
             <input type="submit" value="Submit" />
             </form>

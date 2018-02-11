@@ -31,14 +31,11 @@ li:active{
    display: flex;
    align-items: center;
 }
-.number-selected{
-   background-color: rgb(30,134,255);
-   color: white;
+.right {
+    position: absolute;
+    right: 0px;
 }
-.bet-input{
-   padding: 15px;
-   border-radius: 10px;
-   border: 1px solid lightgrey;
-   font-size: 15pt;
-   margin: 0 10px;
+.left {
+    position: absolute;
+    left: 0px;
 }
