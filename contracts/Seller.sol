@@ -26,4 +26,10 @@ contract Seller is Owned{
         isSeller[_seller] = true;
         NewSeller(_seller);
     }
+
+    function removeSeller (address _seller) external {
+        require (msg.sender == _seller);
+        require (isSeller[_seller] == true);
+        isSeller[_seller] = false;
+    }
 }
