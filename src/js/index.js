@@ -5,7 +5,7 @@ import './../css/index.css'
 
 web3.setProvider(new web3.providers.HttpProvider());
 
-const address = "0xa51cd9919559f9a84d9d603af75444a884e6af9b"
+const address = "0x412d3097f1522cae6a505ead7caa1a3e614f20d0"
 var json = require("./../../build/contracts/First.json");
 var contract = require("truffle-contract");
 const abi = contract(json);
@@ -20,6 +20,7 @@ class App extends React.Component {
             prodNameInput: "",
             prodNumInput: "",
             prodQuantInput: "",
+            sellerAddressArr: []
         };
         if(typeof web3 != 'undefined'){
             console.log("Using web3 detected from external source like Metamask")
@@ -35,31 +36,34 @@ class App extends React.Component {
         // var productRemoved = this.state.ContractInstance.ProductRemoved({fromBlock: 0, toBlock: 'latest'});
         // var productPauseToggled = this.state.ContractInstance.ProductPauseToggled({fromBlock: 0, toBlock: 'latest'});
         // var newSeller = this.state.ContractInstance.NewSeller({fromBlock: 0, toBlock: 'latest'});
-        var events = this.state.ContractInstance.allEvents({fromBlock: 0, toBlock: 'latest'});
-        events.watch(function(error, result){
-            //console.log("1.1");
-            if (!error)
-            {
-                console.log(result.args);
-                if (typeof result.args._seller != "undefined"){
-                    console.log("newSeller works?");
-                }else if (typeof result.args.__seller != "undefined"){
-                    console.log("seller removed?");
-                }else if (typeof result.args.seller != 'undefined' && typeof result.args.price != 'undefined' && typeof result.args.prodID != 'undefined' && typeof result.args.buyer == 'undefined'){
-                    console.log("product listed?");
-                }else if (typeof result.args.seller != 'undefined' && typeof result.args.buyer != 'undefined' && result.args.prodID != 'undefined' && result.args.price != 'undefined'){
-                    console.log("product bought?");
-                }else if (typeof result.args.seller != 'undefined' && typeof result.args.prodID != 'undefined' && result.args.buyer == 'undefined' && result.args.pauseStatus == 'undefined'){
-                    console.log("product removed?");
-                }else if (typeof result.args.seller != 'undefined' && typeof result.args.prodID != 'undefined' && result.args.buyer == 'undefined' && result.args.pauseStatus != 'undefined'){
-                    console.log("product paused?");
-                }
-            } else {
-                console.log(error);
-                console.log("something doesnt work?")
-                return;
-            }
-        });
+        // var events = this.state.ContractInstance.allEvents({fromBlock: 0, toBlock: 'latest'});
+        // events.watch(function(error, result){
+        //     //console.log("1.1");
+        //     if (!error)
+        //     {
+        //         console.log(result.args);
+        //         if (typeof result.args._seller != "undefined"){
+        //             console.log("newSeller works?");
+        //             this.setState({
+        //                 arr: arr.concat(result.args._seller)
+        //             });
+        //         }else if (typeof result.args.__seller != "undefined"){
+        //             console.log("seller removed?");
+        //         }else if (typeof result.args.seller != 'undefined' && typeof result.args.price != 'undefined' && typeof result.args.prodID != 'undefined' && typeof result.args.buyer == 'undefined'){
+        //             console.log("product listed?");
+        //         }else if (typeof result.args.seller != 'undefined' && typeof result.args.buyer != 'undefined' && result.args.prodID != 'undefined' && result.args.price != 'undefined'){
+        //             console.log("product bought?");
+        //         }else if (typeof result.args.seller != 'undefined' && typeof result.args.prodID != 'undefined' && result.args.buyer == 'undefined' && result.args.pauseStatus == 'undefined'){
+        //             console.log("product removed?");
+        //         }else if (typeof result.args.seller != 'undefined' && typeof result.args.prodID != 'undefined' && result.args.buyer == 'undefined' && result.args.pauseStatus != 'undefined'){
+        //             console.log("product paused?");
+        //         }
+        //     } else {
+        //         console.log(error);
+        //         console.log("something doesnt work?")
+        //         return;
+        //     }
+        // });
         // if (newwSeller != ""){
         //     var sellerAddress = this.state.sellerAddress.split();
         //     console.log("next");
@@ -81,6 +85,47 @@ class App extends React.Component {
         this.handleListProdSubmit = this.handleListProdSubmit.bind(this);
     }
 
+    componentDidMount(){
+        const events = this.state.ContractInstance.allEvents({fromBlock: 0, toBlock: 'latest'});
+        events.watch((error, result) => {
+            //console.log("1.1");
+            if (!error)
+            {
+                console.log(result.args);
+                console.log("1");
+                if (typeof result.args._seller != "undefined"){
+                    console.log("newSeller works?");
+                    console.log("test", this);
+                    this.setState({
+                        arr: this.state.sellerAddressArr.concat(result.args._seller)
+                    });
+                }else if (typeof result.args.__seller != "undefined"){
+                    console.log("seller removed?");
+                    console.log("test", this);
+                    var arr = this.state.sellerAddressArr;
+                    var index = arr.indexOf(result.args.__seller);
+                    if (index > -1){
+                        arr.splice(index, 1);
+                        this.setState({
+                            sellerAddressArr: arr
+                        });
+                    }
+                }else if (typeof result.args.seller != 'undefined' && typeof result.args.price != 'undefined' && typeof result.args.prodID != 'undefined' && typeof result.args.buyer == 'undefined' && typeof result.args.quantity != 'undefined'){
+                    console.log("product listed?");
+                }else if (typeof result.args.seller != 'undefined' && typeof result.args.buyer != 'undefined' && result.args.prodID != 'undefined' && result.args.price != 'undefined'){
+                    console.log("product bought?");
+                }else if (typeof result.args.seller != 'undefined' && typeof result.args.prodID != 'undefined' && result.args.buyer == 'undefined' && result.args.pauseStatus == 'undefined'){
+                    console.log("product removed?");
+                }else if (typeof result.args.seller != 'undefined' && typeof result.args.prodID != 'undefined' && result.args.buyer == 'undefined' && result.args.pauseStatus != 'undefined'){
+                    console.log("product paused?");
+                }
+            } else {
+                console.log(error);
+                console.log("something doesnt work?")
+                return;
+            }
+        });
+    }
 
     handleListProdNameChange(event){
         console.log("namechange");
@@ -135,7 +180,7 @@ class App extends React.Component {
         return (
             <div className="main-container">
             <h1>The mrktPlace</h1>
-            <p>{this.state.sellerAddress}</p>
+            <p>{this.state.sellerAddressArr}</p>
             <div align="left"><button onClick={this.buySeller} align='left' >Become a Seller!</button></div>
             <div align="right"><button onClick={this.remSeller} align='right'>Remove a Seller!</button></div>
             <form onSubmit={this.handleListProdSubmit}>

@@ -32,5 +32,6 @@ contract Seller is Owned{
         require (msg.sender == _seller);
         require (isSeller[_seller] == true);
         isSeller[_seller] = false;
+        RemSeller(_seller);
     }
 }

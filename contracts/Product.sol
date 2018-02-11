@@ -4,7 +4,7 @@ import "./Seller.sol";
 
 contract Product is Seller{
     uint256 constant listProductCost = 50 finney;
-    event ProductListed (address indexed seller, uint256 indexed price, uint256 indexed prodID);
+    event ProductListed (address indexed seller, uint256 indexed price, uint256 indexed prodID, uint24 quantity);
     event ProductBought (address indexed seller, address indexed buyer, uint256 indexed prodID, uint256 price, uint24 quantity);
     event ProductRemoved(address indexed seller, uint256 prodID);
     event ProductPauseToggled (address indexed seller, bool indexed pauseStatus, uint256 indexed prodID);
@@ -57,6 +57,6 @@ contract Product is Seller{
         goods[_vendor][nextProductIDs[_vendor]] = temp;
         isProduct[_vendor][nextProductIDs[_vendor]] = true;
         nextProductIDs[_vendor]++;
-        ProductListed(_vendor, _price, nextProductIDs[_vendor]-1);
+        ProductListed(_vendor, _price, nextProductIDs[_vendor]-1, _quantity);
     }
 }
