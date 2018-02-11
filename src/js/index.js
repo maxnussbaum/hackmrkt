@@ -159,6 +159,16 @@ class App extends React.Component {
     }
 
 
+    buyProd(_vendor, _buyer, _prodID, _quantity, _price){
+        this.state.ContractInstance.buyGoods(_vendor, _buyer, _prodID, _quantity, {
+            gas: 1000000,
+            from: web3.eth.defaultAccount,
+            value: web3.toWei(_quantity * _price, "finney")
+        }).then(function(r) {
+            console.log("Bought Product hopefully!")
+        })
+    }
+
     buySeller(){
         this.state.ContractInstance.becomeSeller(web3.eth.defaultAccount, {
             gas: 1000000,
@@ -227,22 +237,34 @@ class App extends React.Component {
             <th>Buy</th>
             </tr>
             {Object.keys(this.state.merch).map(function(key) {
-                return //<div>Key: {key}, Value: {yourObject[key]}</div>;
-                <tr>
-                <td>{key[0]}</td>
-                {console.log("hi")}
-                {console.log({key})}
-                <td>{key[1]}</td>
-                </tr>
+                //console.log("test", this);
+                // console.log("test:" + key);
+                // console.log(this.state.merch[key]);
+                var [a, b] = key.split(',')
+            return (    <tr>
+                    <td>{a}</td>
+                    <td>{b}</td>
+                    <td>{this.state.merch[key][0].c}</td>
+                    <td>{this.state.merch[key][1].c}</td>
+                    {console.log(key)}
+                </tr>)
+            //    console.log("Test: " + this.state.merch[key]);
+                //return //<div>Key: {key}, Value: {yourObject[key]}</div>;
+                //<tr>
+                //<td>{key[0]}</td>
+                //{console.log("hi")}
+                //{console.log({key})}
+                //<td>{key[1]}</td>
+                //</tr>
                 // for (var key in this.state.merch)
-                //     <tr>
-                //         <td>{key[0]}</td>
-                //         <td>{key[1]}</td>
-                //         <td>{this.state.merch.key.0}</td>
-                //         <td>{this.state.merch.key.1}</td>
-                //     </tr>
+                    // <tr>
+                    //     <td>{key[0]}</td>
+                    //     <td>{key[1]}</td>
+                    //     <td>{this.state.merch.key.0}</td>
+                    //     <td>{this.state.merch.key.1}</td>
+                    // </tr>
                 // }}
-            })}
+            }, this)}
             </tbody>
             </table>
             </div>
