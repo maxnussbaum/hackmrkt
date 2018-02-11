@@ -86,7 +86,7 @@ class App extends React.Component {
         this.handleListProdQuantChange = this.handleListProdQuantChange.bind(this);
         this.handleListProdSubmit = this.handleListProdSubmit.bind(this);
         this.handleBuyNum = this.handleBuyNum.bind(this);
-        this.buyProd = this.buyProd.bind(this);
+        // this.buyProd = this.buyProd.bind(this);
     }
 
     componentDidMount(){
@@ -171,17 +171,17 @@ class App extends React.Component {
     }
 
 
-    buyProd(_vendor, _buyer, _prodID, _quantity, _price){
-        console.log("stuck");
-        this.state.ContractInstance.buyGoods(_vendor, _buyer, _prodID, _quantity, {
-            gas: 1000000,
-            from: web3.eth.defaultAccount,
-            value: web3.toWei(_quantity * _price, "finney")
-        }).then(function(r) {
-            console.log("Bought Product hopefully!")
-        })
-        this.state.merch
-    }
+    // buyProd(_vendor, _buyer, _prodID, _quantity, _price){
+    //     console.log("stuck");
+    //     this.state.ContractInstance.buyGoods(_vendor, _buyer, _prodID, _quantity, {
+    //         gas: 1000000,
+    //         from: web3.eth.defaultAccount,
+    //         value: web3.toWei(_quantity * _price, "finney")
+    //     }).then(function(r) {
+    //         console.log("Bought Product hopefully!")
+    //     })
+    //     this.state.merch
+    // }
 
     buySeller(){
         this.state.ContractInstance.becomeSeller(web3.eth.defaultAccount, {
@@ -256,7 +256,7 @@ class App extends React.Component {
                 // console.log(this.state.merch[key]);
                 var [a, b] = key.split(',')
             return (
-                <TableRow a={a} b={b} price={this.state.merch[key][0].c} quantity={this.state.merch[key][1].c}></TableRow>
+                <TableRow a={a} b={b} price={this.state.merch[key][0].c} cont={this.state.ContractInstance} web3={web3} quantity={this.state.merch[key][1].c}></TableRow>
             )
             //    console.log("Test: " + this.state.merch[key]);
                 //return //<div>Key: {key}, Value: {yourObject[key]}</div>;
