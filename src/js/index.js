@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import Web3 from 'web3'
 import './../css/index.css'
+import TableRow from './components/tableRow.js';
 
 web3.setProvider(new web3.providers.HttpProvider());
 
@@ -84,6 +85,8 @@ class App extends React.Component {
         this.handleListProdNumChange = this.handleListProdNumChange.bind(this);
         this.handleListProdQuantChange = this.handleListProdQuantChange.bind(this);
         this.handleListProdSubmit = this.handleListProdSubmit.bind(this);
+        this.handleBuyNum = this.handleBuyNum.bind(this);
+        this.buyProd = this.buyProd.bind(this);
     }
 
     componentDidMount(){
@@ -93,7 +96,6 @@ class App extends React.Component {
             if (!error)
             {
                 console.log(result.args);
-                console.log("1");
                 if (typeof result.args._seller != "undefined"){
                     console.log("newSeller works?");
                     console.log("test", this);
@@ -137,11 +139,14 @@ class App extends React.Component {
     }
 
     handleListProdNameChange(event){
-        console.log("namechange");
+        //console.log("namechange");
         this.setState({
             prodNameInput: event.target.value
         });
     }
+    // handleBuyNumChange(event){
+    //     this.refs.
+    // }
     handleListProdNumChange(event){
         this.setState({
             prodNumInput: event.target.value
@@ -157,9 +162,17 @@ class App extends React.Component {
         event.preventDefault();
         this.listProd()
     }
+    handleBuyNum(e,val, a ,b ,c){
+        console.log("hello");
+        e.preventDefault();
+        var thing = document.getElementById(val).value;
+        console.log(thing);
+        this.buyProd(a, web3.eth.defaultAccount, b, thing, c);
+    }
 
 
     buyProd(_vendor, _buyer, _prodID, _quantity, _price){
+        console.log("stuck");
         this.state.ContractInstance.buyGoods(_vendor, _buyer, _prodID, _quantity, {
             gas: 1000000,
             from: web3.eth.defaultAccount,
@@ -167,6 +180,7 @@ class App extends React.Component {
         }).then(function(r) {
             console.log("Bought Product hopefully!")
         })
+        this.state.merch
     }
 
     buySeller(){
@@ -241,13 +255,9 @@ class App extends React.Component {
                 // console.log("test:" + key);
                 // console.log(this.state.merch[key]);
                 var [a, b] = key.split(',')
-            return (    <tr>
-                    <td>{a}</td>
-                    <td>{b}</td>
-                    <td>{this.state.merch[key][0].c}</td>
-                    <td>{this.state.merch[key][1].c}</td>
-                    {console.log(key)}
-                </tr>)
+            return (
+                <TableRow a={a} b={b} price={this.state.merch[key][0].c} quantity={this.state.merch[key][1].c}></TableRow>
+            )
             //    console.log("Test: " + this.state.merch[key]);
                 //return //<div>Key: {key}, Value: {yourObject[key]}</div>;
                 //<tr>
