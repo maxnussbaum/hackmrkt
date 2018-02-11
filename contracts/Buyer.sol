@@ -28,7 +28,7 @@ contract Buyer is Product {
 
     function _buyGoods (address _vendor, address _buyer, uint256 _prodID, uint24 _quantity) internal {
         goods[_vendor][_prodID].quantity -= _quantity;
-        _vendor.send(_quantity * goods[_vendor][_prodID].price);
+        _vendor.transfer(_quantity * goods[_vendor][_prodID].price);
         ProductBought(_vendor, _buyer, _prodID, goods[_vendor][_prodID].price, _quantity);
     }
 }

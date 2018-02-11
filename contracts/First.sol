@@ -1,6 +1,6 @@
 pragma solidity ^0.4.2;
 
-import "./Product.sol";
+import "./Buyer.sol";
 
 contract First is Buyer{
 
