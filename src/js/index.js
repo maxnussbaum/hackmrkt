@@ -187,7 +187,7 @@ class App extends React.Component {
         this.state.ContractInstance.becomeSeller(web3.eth.defaultAccount, {
             gas: 1000000,
             from: web3.eth.defaultAccount,
-            value: web3.toWei(1.0, 'ether'),
+            value: web3.toWei(100, 'finney'),
         }).then(function(r) {
             console.log("Bought Seller successfully!")
         })

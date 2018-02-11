@@ -5,7 +5,7 @@ import "./owned.sol";
 contract Seller is Owned{
     event NewSeller (address indexed _seller);
     event RemSeller (address indexed __seller);
-    uint256 constant sellerCost = 1 ether;
+    uint256 constant sellerCost = 100 finney;
     mapping (address => bool) isSeller;
     mapping (address => mapping (uint256 => Product.Merchandise)) goods;
     mapping (address => mapping (uint256 => bool)) isProduct;
