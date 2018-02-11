@@ -1,6 +1,6 @@
 pragma solidity ^0.4.2;
 
-import "./Product.sol"
+import "./Product.sol";
 
 contract Buyer is Product {
     //event ProductBought (address indexed seller, address indexed buyer, uint256 indexed prodID, uint256 price, uint24 quantity);
