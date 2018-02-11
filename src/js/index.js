@@ -5,7 +5,7 @@ import './../css/index.css'
 
 web3.setProvider(new web3.providers.HttpProvider());
 
-const address = "0x48b74bfb3a12c0b365636c9d08bcfa00a5382bde"
+const address = "0x37c099891e0acbd7b29360d566ac2e9d2e6c23fe"
 var json = require("./../../build/contracts/First.json");
 var contract = require("truffle-contract");
 const abi = contract(json);
@@ -18,6 +18,9 @@ class App extends React.Component {
         this.state = {
             vendor: web3.eth.defaultAccount,
             isASeller: "a",
+            prodNameInput: "",
+            prodNumInput: "",
+            prodQuantInput: "",
         }
         if(typeof web3 != 'undefined'){
             console.log("Using web3 detected from external source like Metamask")
@@ -107,14 +110,35 @@ class App extends React.Component {
         this.buySeller = this.buySeller.bind(this)
         this.listProd = this.listProd.bind(this)
         this.remSeller = this.remSeller.bind(this)
+        this.handleListProdNameChange = this.handleListProdNameChange.bind(this);
+        this.handleListProdNumChange = this.handleListProdNumChange.bind(this);
+        this.handleListProdQuantChange = this.handleListProdQuantChange.bind(this);
+        this.handleListProdSubmit = this.handleListProdSubmit.bind(this);
     }
-    //this.state.ContractInstance = MyContract.at("0x8c83dd2ac9943d325ec9c6c43509c068176c9785");
 
-    //MyContract.deployed().then(i => this.state.ContractInstance = i);
+    handleListProdNameChange(event){
+        console.log("namechange");
+        this.setState({
+            prodNameInput: event.target.value
+        });
+    }
+    handleListProdNumChange(event){
+        this.setState({
+            prodNumInput: event.target.value
+        });
+    }
+    handleListProdQuantChange(event){
+        this.setState({
+            prodQuantInput: event.target.value
+        });
+    }
+    handleListProdSubmit(event){
+        alert('A product was listed named : ' + this.state.prodNameInput + ' at a price of ' + this.state.prodNumInput + ' with ' + this.state.prodQuantInput + ' listings');
+        event.preventDefault();
+        this.listProd()
+    }
 
 
-
-    
     buySeller(){
         this.state.ContractInstance.becomeSeller(web3.eth.defaultAccount, {
             gas: 1000000,
@@ -124,8 +148,8 @@ class App extends React.Component {
             console.log("Bought Seller successfully!")
         })
     };
-    listProd(_price, _quantity){
-        this.state.ContractInstance.listProduct(web3.eth.defaultAccount, 10, 10, {
+    listProd(){
+        this.state.ContractInstance.listProduct(web3.eth.defaultAccount, this.state.prodNumInput, this.state.prodQuantInput, {
             gas: 1000000,
             from: web3.eth.defaultAccount,
             value: web3.toWei(50, 'finney')
@@ -148,19 +172,19 @@ class App extends React.Component {
             <p>{this.state.isASeller}</p>
             <button onClick={this.buySeller}>Become a Seller!</button>
             <button onClick={this.remSeller}>Remove a Seller!</button>
-            <form onSubmit={this.listProd}>
+            <form onSubmit={this.handleListProdSubmit}>
             <h2>List a Product!</h2>
             <label>
             Product Name
-            <input type="text" name="name" />
+            <input type="text" value={this.state.prodNameInput} onChange={this.handleListProdNameChange}/>
             </label>
             <label>
             Price
-            <input type="number" name="_price" />
+            <input type="number" value={this.state.prodNumInput} onChange={this.handleListProdNumChange}/>
             </label>
             <label>
             Quantity
-            <input type="number" name="_quantity" />
+            <input type="number"value={this.state.prodQuantInput} onChange={this.handleListProdQuantChange}/>
             </label>
             <input type="submit" value="Submit" />
             </form>
