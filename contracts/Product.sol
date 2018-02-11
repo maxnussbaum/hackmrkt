@@ -5,7 +5,7 @@ import "./Seller.sol";
 contract Product is Seller{
     uint256 constant listProductCost = 50 finney;
     event ProductListed (address indexed seller, uint256 indexed price, uint256 indexed prodID);
-    event ProductBought (address indexed seller, address indexed buyer, uint256 indexed prodID, uint256 price);
+    event ProductBought (address indexed seller, address indexed buyer, uint256 indexed prodID, uint256 price, uint24 quantity);
     event ProductRemoved(address indexed seller, uint256 prodID);
     event ProductPauseToggled (address indexed seller, bool indexed pauseStatus, uint256 indexed prodID);
 

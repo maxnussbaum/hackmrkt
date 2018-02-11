@@ -5,7 +5,7 @@ import './../css/index.css'
 
 web3.setProvider(new web3.providers.HttpProvider());
 
-const address = "0x37c099891e0acbd7b29360d566ac2e9d2e6c23fe"
+const address = "0x6945f2889076dbc9e0f5586381d2b7cbb88c3193"
 var json = require("./../../build/contracts/First.json");
 var contract = require("truffle-contract");
 const abi = contract(json);
@@ -37,8 +37,9 @@ class App extends React.Component {
         // var productPauseToggled = this.state.ContractInstance.ProductPauseToggled({fromBlock: 0, toBlock: 'latest'});
         // var newSeller = this.state.ContractInstance.NewSeller({fromBlock: 0, toBlock: 'latest'});
         var events = this.state.ContractInstance.allEvents({fromBlock: 0, toBlock: 'latest'});
-        console.log("1");
+        //console.log("1");
         events.watch(function(error, result){
+            //console.log("1.1");
             if (!error)
             {
                 console.log(result.args);
@@ -59,7 +60,7 @@ class App extends React.Component {
                 return;
             }
         });
-        console.log("2");
+        //console.log("2");
         // productPauseToggled.watch(function(error, result){
         //     if (!error)
         //     {
@@ -106,7 +107,7 @@ class App extends React.Component {
         // });
 
 
-        console.log("3")
+        //console.log("3")
         this.buySeller = this.buySeller.bind(this)
         this.listProd = this.listProd.bind(this)
         this.remSeller = this.remSeller.bind(this)
