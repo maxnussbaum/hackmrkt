@@ -6,7 +6,7 @@ import TableRow from './components/tableRow.js';
 
 web3.setProvider(new web3.providers.HttpProvider());
 
-const address = "0x412d3097f1522cae6a505ead7caa1a3e614f20d0"
+const address = "0x0c013d4844e2d5210812a366e06d6716b0721625"
 var json = require("./../../build/contracts/First.json");
 var contract = require("truffle-contract");
 const abi = contract(json);
@@ -17,7 +17,6 @@ class App extends React.Component {
     constructor(props){
         super(props)
         this.state = {
-            vendor: web3.eth.defaultAccount,
             prodNameInput: "",
             prodNumInput: "",
             prodQuantInput: "",
@@ -85,8 +84,9 @@ class App extends React.Component {
         this.handleListProdNumChange = this.handleListProdNumChange.bind(this);
         this.handleListProdQuantChange = this.handleListProdQuantChange.bind(this);
         this.handleListProdSubmit = this.handleListProdSubmit.bind(this);
-        this.handleBuyNum = this.handleBuyNum.bind(this);
-        // this.buyProd = this.buyProd.bind(this);
+        //this.handleBuyNum = this.handleBuyNum.bind(this);
+        this.addMerch = this.addMerch.bind(this);
+        //this.buyProd = this.buyProd.bind(this);
     }
 
     componentDidMount(){
@@ -95,7 +95,7 @@ class App extends React.Component {
             //console.log("1.1");
             if (!error)
             {
-                console.log(result.args);
+                //console.log(result.args);
                 if (typeof result.args._seller != "undefined"){
                     console.log("newSeller works?");
                     console.log("test", this);
@@ -114,15 +114,16 @@ class App extends React.Component {
                         });
                     }
                 }else if (typeof result.args.seller != 'undefined' && typeof result.args.price != 'undefined' && typeof result.args.prodID != 'undefined' && typeof result.args.buyer == 'undefined' && typeof result.args.quantity != 'undefined'){
-                    console.log("product listed?");
-                    console.log("test", this);
-                    const newProdList = {
-                        [[result.args.seller, result.args.prodID]]: [result.args.price, result.args.quantity]
-                    };
-                    const new2Prod = Object.assign(this.state.merch, newProdList);
-                    this.setState({
-                        merch: new2Prod
-                    });
+                    console.log("product listed?index");
+                    //console.log("test", this);
+                    this.addMerch(result);
+                    // const newProdList = {
+                    //     [[result.args.seller, result.args.prodID]]: [result.args.price, result.args.quantity]
+                    // };
+                    // const new2Prod = Object.assign(this.state.merch, newProdList);
+                    // this.setState({
+                    //     merch: new2Prod
+                    // });
                 }else if (typeof result.args.seller != 'undefined' && typeof result.args.buyer != 'undefined' && result.args.prodID != 'undefined' && result.args.price != 'undefined'){
                     console.log("product bought?");
                 }else if (typeof result.args.seller != 'undefined' && typeof result.args.prodID != 'undefined' && result.args.buyer == 'undefined' && result.args.pauseStatus == 'undefined'){
@@ -135,6 +136,16 @@ class App extends React.Component {
                 console.log("something doesnt work?")
                 return;
             }
+        });
+    }
+
+    addMerch(result){
+        const newProdList = {
+            [[result.args.seller, result.args.prodID]]: [result.args.price, result.args.quantity]
+        };
+        const new2Prod = Object.assign(this.state.merch, newProdList);
+        this.setState({
+            merch: new2Prod
         });
     }
 
@@ -162,13 +173,13 @@ class App extends React.Component {
         event.preventDefault();
         this.listProd()
     }
-    handleBuyNum(e,val, a ,b ,c){
-        console.log("hello");
-        e.preventDefault();
-        var thing = document.getElementById(val).value;
-        console.log(thing);
-        this.buyProd(a, web3.eth.defaultAccount, b, thing, c);
-    }
+    // handleBuyNum(e,val, a ,b ,c){
+    //     console.log("hello");
+    //     e.preventDefault();
+    //     var thing = document.getElementById(val).value;
+    //     console.log(thing);
+    //     this.buyProd(a, web3.eth.defaultAccount, b, thing, c);
+    // }
 
 
     // buyProd(_vendor, _buyer, _prodID, _quantity, _price){
@@ -180,7 +191,6 @@ class App extends React.Component {
     //     }).then(function(r) {
     //         console.log("Bought Product hopefully!")
     //     })
-    //     this.state.merch
     // }
 
     buySeller(){
